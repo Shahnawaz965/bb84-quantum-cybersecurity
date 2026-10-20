@@ -9,7 +9,8 @@ An educational simulation of the **BB84 quantum key distribution (QKD)** protoco
 - Optional Eve intercept-and-resend attack
 - Sifting of positions where Alice and Bob used matching bases
 - Random subset disclosure to estimate the quantum bit error rate (QBER)
-- Interactive Streamlit dashboard with adjustable channel noise, Eve on/off, a QBER chart, history, and CSV download
+- Interactive Streamlit dashboard with channel noise, Eve on/off, a QBER chart, run history, and CSV download
+- Unit tests and a GitHub Actions workflow
 
 ## Project structure
 
@@ -18,6 +19,12 @@ bb84-quantum-cybersecurity/
 ├── bb84_basic.py
 ├── app.py
 ├── requirements.txt
+├── tests/
+│   └── test_bb84_basic.py
+├── docs/
+│   └── SCIENTIFIC_NOTES.md
+├── .github/workflows/
+│   └── python-tests.yml
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -31,7 +38,7 @@ Requires Python 3.9+.
 python3 bb84_basic.py
 ```
 
-Enter a number of transmitted bits, then choose whether Eve is active. The script prints the sifted-key length, disclosed sample size, measured QBER, and a demonstration decision.
+Enter a number of transmitted signals, then choose whether Eve is active. The script prints the sifted-key length, disclosed sample size, measured QBER, and a demonstration decision.
 
 ## 2. Run the interactive dashboard
 
@@ -44,6 +51,16 @@ streamlit run app.py
 ```
 
 Streamlit prints a local URL, usually http://localhost:8501.
+
+## 3. Run the tests
+
+The basic simulation tests require only the Python standard library.
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+GitHub Actions runs these tests on pushes to `main` and on pull requests targeting `main`.
 
 ## How the demonstration works
 
@@ -60,9 +77,11 @@ For an ideal channel, intercept-and-resend eavesdropping produces an expected QB
 
 - This is a **classical outcome-level educational simulation**, not a physical quantum channel and not a full quantum-state simulator.
 - A low measured QBER does not prove that no attacker is present; a high QBER does not uniquely identify an attacker.
-- The 11% default threshold in the dashboard is an **illustrative setting, not a universal security threshold**. Secure thresholds depend on the protocol, assumptions, implementation, error-correction leakage, and finite-key security analysis.
-- The displayed candidate key is not a production cryptographic key. Real QKD requires an authenticated classical channel, error correction, privacy amplification, authentication/key management, and a suitable security proof.
+- The 11% default threshold in the dashboard is an **illustrative setting, not a universal security threshold**. Secure thresholds depend on protocol assumptions, implementation, error-correction leakage, and finite-key security analysis.
+- The displayed candidate bits are not a production secret key. Real QKD requires an authenticated classical channel, error correction, privacy amplification, authentication/key management, and a suitable security proof.
 - Do not use this demo to protect real communications.
+
+See [Scientific Notes](docs/SCIENTIFIC_NOTES.md) for the threat model and suggestions for a live demonstration.
 
 ## Dependencies
 
